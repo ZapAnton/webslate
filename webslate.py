@@ -14,19 +14,25 @@ class TranslateSiteParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
 
-        self.is_div_tag = False
+        self.is_translation_tag = False
+
+        self.translations = []
 
     def handle_starttag(self, tag, attrs):
         if tag == 'div':
-            self.is_div_tag = True
+            for name, value in attrs:
+                if name == 'class' and value == 'dict-result':
+                    self.is_translation_tag = True
+
+                    break
 
     def handle_endtag(self, tag):
-        if tag == 'div' and self.is_div_tag:
-            self.is_div_tag = False
+        if tag == 'div' and self.is_translation_tag:
+            self.is_translation_tag = False
 
     def handle_data(self, data):
-        if self.is_div_tag:
-            print(data)
+        if self.is_translation_tag:
+            self.translations.append(data)
 
 if __name__ == '__main__':
     word = 'język'
@@ -38,4 +44,6 @@ if __name__ == '__main__':
     html_parser.feed(html)
 
     html_parser.close()
+
+    print(html_parser.translations)
 
