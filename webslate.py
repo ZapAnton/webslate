@@ -47,8 +47,6 @@ if __name__ == '__main__':
 
     html = fetch_html_page(word)
 
-    write_to_file(html)
-
     html_parser = TranslateSiteParser()
 
     html_parser.feed(html)
