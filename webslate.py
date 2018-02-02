@@ -20,7 +20,11 @@ class TranslateSiteParser(HTMLParser):
 
         self.translations = []
 
+        self.tag = None
+
     def handle_starttag(self, tag, attrs):
+        self.tag = tag
+
         if tag == 'div':
             for name, value in attrs:
                 if name == 'class' and value == 'dict-result':
@@ -28,13 +32,11 @@ class TranslateSiteParser(HTMLParser):
 
                     break
 
-    def handle_endtag(self, tag):
-        if tag == 'div' and self.is_translation_tag:
-            self.is_translation_tag = False
-
     def handle_data(self, data):
-        if self.is_translation_tag:
+        if self.is_translation_tag and self.tag == 'strong':
             self.translations.append(data)
+
+            self.is_translation_tag = False
 
 def write_to_file(html_string: str):
     with open('translate.html', 'w') as file:
@@ -53,5 +55,5 @@ if __name__ == '__main__':
 
     html_parser.close()
 
-    print(html_parser.translations)
-
+    for word in html_parser.translations:
+        print(word)
