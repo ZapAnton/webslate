@@ -39,13 +39,15 @@ class TranslateSiteParser(HTMLParser):
             self.is_translation_tag = False
 
 def write_to_file(html_string: str):
-    with open('translate.html', 'w') as file:
+    with open('tmp/translate.html', 'w') as file:
         file.write(html_string)
 
 if __name__ == '__main__':
     word = 'język'
 
     html = fetch_html_page(word)
+
+    write_to_file(html)
 
     html_parser = TranslateSiteParser()
 
