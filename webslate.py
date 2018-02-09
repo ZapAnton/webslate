@@ -1,3 +1,4 @@
+import sys
 from urllib import request, parse
 from html.parser import HTMLParser
 
@@ -43,7 +44,7 @@ def write_to_file(html_string: str):
         file.write(html_string)
 
 def get_translations(word_to_translate: str):
-    html = fetch_html_page(word)
+    html = fetch_html_page(word_to_translate)
 
     html_parser = TranslateSiteParser()
 
@@ -60,8 +61,22 @@ def get_translations(word_to_translate: str):
     return translations
 
 if __name__ == '__main__':
-    word = 'język'
+    if len(sys.argv) < 2:
+        print('Please, provide the words to translate!')
 
-    translations = get_translations(word)
+        quit()
 
-    print(translations)
+    words_to_translate = sys.argv[1:]
+
+    translations_dict = {}
+
+    for word_to_translate in words_to_translate:
+        translations_dict[word_to_translate] = get_translations(word_to_translate)
+
+    for word_to_translate, translations in translations_dict.items():
+        if len(translations) == 0:
+            print(word_to_translate, ':', 'No translations were found!')
+        else:
+            print(word_to_translate, ':', end=' ')
+
+            print(', '.join(translations))
