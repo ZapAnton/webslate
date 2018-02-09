@@ -42,12 +42,8 @@ def write_to_file(html_string: str):
     with open('tmp/translate.html', 'w') as file:
         file.write(html_string)
 
-if __name__ == '__main__':
-    word = 'język'
-
+def get_translations(word_to_translate: str):
     html = fetch_html_page(word)
-
-    write_to_file(html)
 
     html_parser = TranslateSiteParser()
 
@@ -55,5 +51,17 @@ if __name__ == '__main__':
 
     html_parser.close()
 
-    for word in html_parser.translations:
-        print(word)
+    translations = html_parser.translations
+
+    translations = [translation for translation in translations if translation != word_to_translate]
+
+    translations = set(translations)
+
+    return translations
+
+if __name__ == '__main__':
+    word = 'język'
+
+    translations = get_translations(word)
+
+    print(translations)
